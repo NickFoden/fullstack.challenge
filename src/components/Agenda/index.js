@@ -10,6 +10,7 @@ import runEvery  from 'lib/runEvery'
 
 import type Account from 'src/models/Account'
 
+import DeptSection from "./DeptSection"
 import List from './List'
 import EventCell from './EventCell'
 
@@ -26,6 +27,7 @@ type tProps = {
 }
 
 type State = {
+  departmentToggleOn: Boolean,
   selectedCalendar: String
 }
 const currentTime = observable({
@@ -40,6 +42,7 @@ class Agenda extends Component<tProps, State> {
   constructor () {
     super()
     this.state = {
+      departmentToggleOn: false,
       selectedCalendar: 'all',
     }
   }
@@ -49,6 +52,35 @@ class Agenda extends Component<tProps, State> {
     this.setState({[name]: event.target.value})
   }
 
+  departmentToggle = () => {
+    this.setState(prevState => ({
+      departmentToggleOn: !prevState.departmentToggleOn,
+    }))
+  }
+
+  renderByDepartments = (events: {calendar: Calendar, event: Event }) => {
+    let departmentsObj = {None: []}
+    events.map(item => {
+      if (item.event.department) {
+        departmentsObj[item.event.department] ? departmentsObj[item.event.department].push(item) : departmentsObj[item.event.department] = [item]
+      }
+      else {
+        departmentsObj.None.push(item)
+      }
+    })
+
+    let noDepartmentArray = events.filter(item => !item.event.department)
+    let deptsArray = []
+    for (let dept in departmentsObj) {
+      if (dept !== 'None') {
+        let theEvents = events.filter(item => item.event.department === dept)
+        deptsArray.push(<DeptSection theEvents={theEvents} dept={dept} key={dept} />)
+      }
+    }
+    deptsArray.push(<DeptSection theEvents={noDepartmentArray} dept={'No Dept'} key='none' />)
+
+    return deptsArray
+  }
   /**
    * Return events from all calendars, sorted by date-time.
    * Returned objects contain both Event and corresponding Calendar
@@ -60,8 +92,8 @@ class Agenda extends Component<tProps, State> {
         { calendar, event }
       ))
     ))
-    .flat()
-    
+      .flat()
+
     // Sort events by date-time, ascending
     events.sort((a, b) => (a.event.date.diff(b.event.date).valueOf()))
 
@@ -69,6 +101,7 @@ class Agenda extends Component<tProps, State> {
   }
 
   render () {
+    const {departmentToggleOn, selectedCalendar} = this.state
     return (
       <div className={style.outer}>
         <div className={style.container}>
@@ -78,22 +111,24 @@ class Agenda extends Component<tProps, State> {
               {greeting(currentTime.time)}
             </span>
             <span className={style.calendar_select_container}>
-              <label className={style.calendar_select_label}>Current Calendar:</label>
-              <select name='selectedCalendar' value={this.state.selectedCalendar} onChange={this.handleChange}>
+              <label className={style.calendar_select_label}>Current Calendar{selectedCalendar === 'all' ? 's' : null}:</label>
+              <select name='selectedCalendar' value={selectedCalendar} onChange={this.handleChange}>
                 <option key='all'>all</option>
                 {this.props.account.calendars.map((item: Calendar) => {
-                  return <option key={item.id}>{item.id}</option>
+                  return <option key={item.id} value={item.id}>{item.id.substr(0, 4)}</option>
                 })}
               </select>
             </span>
+            <button className={style.button_dept_toggle} onClick={this.departmentToggle}>{departmentToggleOn ? 'Ungroup' : 'Group by Depts'}</button>
           </div>
-
-          <List>
-            {this.events.map(({ calendar, event }) => (
-              <EventCell key={event.id} calendar={calendar} event={event} />
-            ))}
-          </List>
-
+          {!departmentToggleOn
+            ? <List>
+              {this.events.map(({ calendar, event }) => (
+                <EventCell key={event.id} calendar={calendar} event={event} />
+              ))}
+            </List>
+            : <div>{this.renderByDepartments(this.events)}</div>
+          }
         </div>
       </div>
     )

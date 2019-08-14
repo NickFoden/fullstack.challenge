@@ -25,6 +25,7 @@
 
 .header {
   display: flex;
+  justify-content: space-around;
   padding: 16px 0 12px 16px;
 }
 
@@ -36,11 +37,30 @@
 .calendar_select_container {
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
   text-align: center;
-  margin-left: 40px;
+}
+.calendar_select_container select {
+  cursor: pointer;
 }
 
 .calendar_select_label {
   @include caption-medium-text;
   margin-bottom: 5px;
+  min-width: 105px;
+  text-align: left;
+}
+
+.button_dept_toggle {
+  background-color: $lightGrayColor;
+  box-shadow: 1px 2px #888888;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 10px;
+  min-width: 88px;
+  padding: 0 2px;
+}
+.button_dept_toggle:hover {
+  color: $blackColor;
+  opacity: 0.7;
 }

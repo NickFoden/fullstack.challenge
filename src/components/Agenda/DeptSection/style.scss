@@ -1,0 +1,17 @@
+@import 'lib/style';
+
+.dept_section {
+  padding: 0 20px;
+}
+.dept_section hr {
+  margin-left: 0;
+  width: 95%;
+}
+.dept_section h4 {
+  @include caption-medium-text;
+  color: $blackColor;
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin: 10px 0 0 0;
+  padding: 0;
+}
