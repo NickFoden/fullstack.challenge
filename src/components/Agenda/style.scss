@@ -1,4 +1,4 @@
-@import "lib/style";
+@import 'lib/style';
 
 .outer {
   position: absolute;
@@ -24,11 +24,23 @@
 }
 
 .header {
-  display: block;
+  display: flex;
   padding: 16px 0 12px 16px;
 }
 
 .header {
   @include title-text;
   color: $blackColor;
+}
+
+.calendar_select_container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-left: 40px;
+}
+
+.calendar_select_label {
+  @include caption-medium-text;
+  margin-bottom: 5px;
 }

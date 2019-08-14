@@ -24,6 +24,10 @@ import style from './style'
 type tProps = {
   account: Account
 }
+
+type State = {
+  selectedCalendar: String
+}
 const currentTime = observable({
   time: DateTime.local().hour,
 })
@@ -32,21 +36,32 @@ runEvery(1000, () => { currentTime.time = DateTime.local().hour })
 
 @inject('account')
 @observer
-class Agenda extends Component<tProps> {
+class Agenda extends Component<tProps, State> {
+  constructor () {
+    super()
+    this.state = {
+      selectedCalendar: 'all',
+    }
+  }
+
+  handleChange = (event: SyntheticInputEvent<EventTarget>): void => {
+    const {name} = event.target
+    this.setState({[name]: event.target.value})
+  }
+
   /**
    * Return events from all calendars, sorted by date-time.
    * Returned objects contain both Event and corresponding Calendar
    */
   @computed
   get events (): Array<{ calendar: Calendar, event: Event }> {
-    const events = this.props.account.calendars
-      .map((calendar) => (
-        calendar.events.map((event) => (
-          { calendar, event }
-        ))
+    const events = this.props.account.calendars.filter(item => item.id === this.state.selectedCalendar || this.state.selectedCalendar === 'all').map((calendar) => (
+      calendar.events.map((event) => (
+        { calendar, event }
       ))
-      .flat()
-
+    ))
+    .flat()
+    
     // Sort events by date-time, ascending
     events.sort((a, b) => (a.event.date.diff(b.event.date).valueOf()))
 
@@ -61,6 +76,15 @@ class Agenda extends Component<tProps> {
           <div className={style.header}>
             <span className={style.title}>
               {greeting(currentTime.time)}
+            </span>
+            <span className={style.calendar_select_container}>
+              <label className={style.calendar_select_label}>Current Calendar:</label>
+              <select name='selectedCalendar' value={this.state.selectedCalendar} onChange={this.handleChange}>
+                <option key='all'>all</option>
+                {this.props.account.calendars.map((item: Calendar) => {
+                  return <option key={item.id}>{item.id}</option>
+                })}
+              </select>
             </span>
           </div>
 
