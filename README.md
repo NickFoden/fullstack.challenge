@@ -25,7 +25,7 @@
 
 ### Submitting your results
 
-2 possibilities: 
+2 possibilities:
 1. Fork this repository and send us a Pull Request
 2. Clone this repository and share yours with [@pierre-elie](https://github.com/pierre-elie) and [@quentinsl](https://github.com/quentinsl)
 
@@ -73,7 +73,17 @@ The requirements for this feature are:
 Please add your answers to the questions below:
 
 1. How long did you spend on this challenge?
+
+4 hours. This project's EsLint rules and my editor did not get along. After trying prettier configs and various ideas had to get started and so spent a lot of time formatting my code while working on this.
+
 2. In your opinion, what are features that Double could work on that would be helpful for assistants when managing agendas?
-3. If you had more time, what would you add or change in the codebase? 
+
+Reassigning tasks to other people, logging notes to the events, maybe organizing by address if errands/tasks in same area/proximity, warnings/alerts of when to leave to be ontime if event is not where the person is, labels by level of urgency/importance, asssigning subtask to self or someone with text/email reminders until task is completed, giving others permission/access to add to the calendar and view it, private events, warnings if a time is overloaded like a super busy afternoon warning
+
+3. If you had more time, what would you add or change in the codebase?
+
+I would research MobX more as I think I could refactor to do things in a more MobX way, and also would make sure my editor could format on save. And add more css styling. Was good intro to MobX. Using Decorators seems like they could be really powerful.
+
 4. Do you have any constructive feedback that you would like to share with our team?
 
+Good challenge. Seemed straightforward, but then getting into it Mobx and Flow are new to me. So was interesting to read documentation and work piece by piece and not be able to move fast and be continuously coding. I would be curious to hear how many people that this is their first intro to MobX or if they have used this before. 
