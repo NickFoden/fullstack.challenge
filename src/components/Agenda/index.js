@@ -2,10 +2,11 @@
 
 import React, { Component } from 'react'
 import { DateTime } from 'luxon'
-import { computed } from 'mobx'
-import { observer, inject } from 'mobx-react'
+import { computed, observable } from 'mobx'
+import { inject, observer } from 'mobx-react'
 
 import greeting from 'lib/greeting'
+import runEvery  from 'lib/runEvery'
 
 import type Account from 'src/models/Account'
 
@@ -23,6 +24,11 @@ import style from './style'
 type tProps = {
   account: Account
 }
+const currentTime = observable({
+  time: DateTime.local().hour,
+})
+
+runEvery(1000, () => { currentTime.time = DateTime.local().hour })
 
 @inject('account')
 @observer
@@ -54,7 +60,7 @@ class Agenda extends Component<tProps> {
 
           <div className={style.header}>
             <span className={style.title}>
-              {greeting(DateTime.local().hour)}
+              {greeting(currentTime.time)}
             </span>
           </div>
 
